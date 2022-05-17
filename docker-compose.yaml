@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  db:
+    container_name: aisa-postgres
+    build: ./docker/postgres
+    restart: unless-stopped
+    ports:
+      - '5444:5432'
+    volumes:
+      - ./docker/data/postgres:/var/lib/postgresql
+      - ./docker/postgres/scripts:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootroot
+      TZ: "Europe/Moscow"
