@@ -13,7 +13,7 @@ spring:
       event:
         merge:
           entity_copy_observer: "allow"
-      ddl-auto: validate
+      ddl-auto: update
 
     properties:
       javax:
@@ -29,3 +29,7 @@ spring:
       user: root
       password: rootroot
       baseline-on-migrate: true
+
+time_calculator:
+  init_time: 5
+  base_time_per_100_ml: 4
