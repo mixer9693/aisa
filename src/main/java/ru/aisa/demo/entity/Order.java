@@ -31,7 +31,7 @@ public class Order {
 
     private String comment;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 

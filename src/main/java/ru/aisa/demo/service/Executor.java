@@ -32,11 +32,11 @@ public class Executor {
     public void handleContextRefresh(ContextRefreshedEvent event) {
         while (coffeeMachine.isAvailable()){
             try {
-                String orderUuid = queue.take();
+                String orderUid = queue.take();
 
-                Optional<Order> optional = orderRepository.findById(orderUuid);
+                Optional<Order> optional = orderRepository.findById(orderUid);
                 if (optional.isEmpty()){
-                    log.warn("Order {} not found", orderUuid);
+                    log.warn("Order {} not found", orderUid);
                     continue;
                 }
                 Order order = optional.get();

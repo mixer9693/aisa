@@ -16,6 +16,7 @@ import ru.aisa.demo.repository.CoffeeTypeRepository;
 import ru.aisa.demo.repository.OrderRepository;
 
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +58,7 @@ public class OrderServiceImpl implements OrderService {
     public ProductDto obtainProduct(String uuid){
         Order order = orderRepository.findById(uuid).orElseThrow();
         if (order.getStatus() != OrderStatus.COMPLETED){
-            // TODO
-            throw new RuntimeException();
+            throw new NoSuchElementException();
         }
         Product product = order.getProduct();
         product.setObtained(true);

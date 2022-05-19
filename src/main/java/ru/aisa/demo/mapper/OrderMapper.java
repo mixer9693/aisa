@@ -18,7 +18,9 @@ public interface OrderMapper {
 
     @AfterMapping
     default void dtoToOrder(@MappingTarget Order order, OrderInputDto dto, @Context CoffeeTypeRepository repo) {
-        CoffeeType type = repo.findByName(dto.getName()).orElseThrow();
+        CoffeeType type = repo.findByName(dto.getName())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("Coffee type \"%s\" not found", dto.getName())));
         order.setType(type);
     }
 }

@@ -7,6 +7,7 @@ import ru.aisa.demo.entity.CoffeeMachine;
 import ru.aisa.demo.entity.Order;
 import ru.aisa.demo.entity.Product;
 import ru.aisa.demo.enums.OrderStatus;
+import ru.aisa.demo.repository.ProductRepository;
 import ru.aisa.demo.util.CostCalculator;
 import ru.aisa.demo.util.OrderCost;
 import ru.aisa.demo.util.TimeCalculator;
@@ -19,6 +20,7 @@ public class CoffeeMachineProcessorImpl implements CoffeeMachineProcessor {
     private final TimeCalculator timeCalculator;
     private final OrderService orderService;
     private final CoffeeMachineService coffeeMachineService;
+    private final ProductRepository productRepository;
 
     @Override
     public void executeOrder(Order order, CoffeeMachine coffeeMachine) {
@@ -41,7 +43,8 @@ public class CoffeeMachineProcessorImpl implements CoffeeMachineProcessor {
         try {
             Product product = process(order, time);
             order.setProduct(product);
-            orderService.updateStatus(order, OrderStatus.COMPLETED, "Ok");
+            productRepository.save(product);
+            orderService.updateStatus(order, OrderStatus.COMPLETED, "Enjoy your coffee");
         } catch (RuntimeException e){
             orderService.updateStatus(order, OrderStatus.ERROR, "Error");
         } finally {
@@ -52,7 +55,7 @@ public class CoffeeMachineProcessorImpl implements CoffeeMachineProcessor {
 
     public Product process(Order order, int time) {
         try {
-            Thread.sleep(time);
+            Thread.sleep(time * 1000);
         } catch (InterruptedException e) {
             log.warn("Process was interrupted");
             throw new RuntimeException(e.getMessage());

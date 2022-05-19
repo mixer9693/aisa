@@ -23,6 +23,11 @@ public class Product {
     private LocalDateTime creationDateTime;
     private boolean obtained;
 
+    @PrePersist
+    public void prePersist() {
+        creationDateTime = LocalDateTime.now();
+    }
+
     public static class ProductBuilder {
         public ProductBuilder() {
             //empty
