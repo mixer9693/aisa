@@ -1,6 +1,7 @@
 package ru.aisa.demo.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -20,16 +21,17 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class OrderServiceImpl implements OrderService {
+    private final PlatformTransactionManager transactionManager;
+    private final Queue<Order, String> queue;
     private final OrderRepository orderRepository;
     private final CoffeeTypeRepository coffeeTypeRepository;
     private final OrderMapper orderMapper;
     private final ProductMapper productMapper;
-    private final Queue queue;
-    private final PlatformTransactionManager transactionManager;
 
     @Override
-    public OrderOutputDto create(OrderInputDto orderDto){
+    public OrderOutputDto create(OrderInputDto orderDto) {
         Order order = orderMapper.dtoToOrder(orderDto, coffeeTypeRepository);
         order.setStatus(OrderStatus.WAITING);
 
@@ -37,13 +39,18 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderRepository.save(order);
             transactionManager.commit(transaction);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             transactionManager.rollback(transaction);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to create order");
         }
 
-        queue.add(order.getUid());
-
+        try {
+            queue.add(order.getUid());
+        } catch (InterruptedException e){
+            log.warn("Failed to add order {} to queue", order.getUid());
+            orderRepository.delete(order);
+            throw new RuntimeException("Failed to create order");
+        }
         return orderMapper.orderToDto(order);
     }
 

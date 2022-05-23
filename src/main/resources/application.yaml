@@ -33,3 +33,5 @@ spring:
 time_calculator:
   init_time: 5
   base_time_per_100_ml: 4
+
+current_machine_id: 1

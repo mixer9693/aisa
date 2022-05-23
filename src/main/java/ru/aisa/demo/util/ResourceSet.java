@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class OrderCost {
+public class ResourceSet {
     private Integer water;
     private Integer coffee;
     private Integer milk;
     private Integer cups;
 
-    public static class OrderCostBuilder {
-        public OrderCostBuilder() {
+    public static class ResourceSetBuilder {
+        public ResourceSetBuilder() {
             //empty
         }
     }
