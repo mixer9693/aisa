@@ -7,8 +7,8 @@ import ru.aisa.demo.enums.Size;
 @Component
 public class CostCalculator {
 
-    public OrderCost calculate(CoffeeType type, Size size){
-        return new OrderCost.OrderCostBuilder()
+    public ResourceSet calculate(CoffeeType type, Size size){
+        return new ResourceSet.ResourceSetBuilder()
                 .water(type.getWaterConsumptionPer100ml() * (size.getValue() / 100))
                 .coffee(type.getCoffeeConsumptionPer100ml() * (size.getValue() / 100))
                 .milk(type.getMilkConsumptionPer100ml() * (size.getValue() / 100))

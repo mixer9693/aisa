@@ -1,7 +1,8 @@
 package ru.aisa.demo.entity;
 
 import lombok.Data;
-import ru.aisa.demo.util.OrderCost;
+import ru.aisa.demo.enums.MachineState;
+import ru.aisa.demo.util.ResourceSet;
 
 import javax.persistence.*;
 
@@ -19,19 +20,35 @@ public class CoffeeMachine {
     private Integer coffeeAmount;
     private Integer milkAmount;
     private Float speedFactor;
-    private boolean available;
+    @Enumerated(EnumType.STRING)
+    private MachineState state;
 
-    public boolean hasResources(OrderCost cost){
+    public boolean hasResources(ResourceSet cost){
         return getCoffeeAmount() >= cost.getCoffee()
                 && getWaterAmount() >= cost.getWater()
                 && getMilkAmount() >= cost.getMilk()
                 && getCupsAmount() >= cost.getCups();
     }
 
-    public void useResources(OrderCost cost){
+    public void useResources(ResourceSet cost){
         setWaterAmount(getWaterAmount() - cost.getWater());
         setCoffeeAmount(getCoffeeAmount() - cost.getCoffee());
         setMilkAmount(getMilkAmount() - cost.getMilk());
         setCupsAmount(getCupsAmount() - cost.getCups());
+    }
+
+    public void replenishResources(ResourceSet resources){
+        setWaterAmount(getWaterAmount() + resources.getWater());
+        setCoffeeAmount(getCoffeeAmount() + resources.getCoffee());
+        setMilkAmount(getMilkAmount() + resources.getMilk());
+        setCupsAmount(getCupsAmount() + resources.getCups());
+    }
+
+    public boolean isUnusable(){
+        return state == MachineState.UNUSABLE;
+    }
+
+    public boolean isAvailable(){
+        return state == MachineState.AVAILABLE;
     }
 }
